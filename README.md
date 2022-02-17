@@ -6,6 +6,10 @@ Just throw all the files in the home directory.
 
 Install neovim following the steps here: https://github.com/neovim/neovim/wiki/Installing-Neovim
 
+```
+sudo apt install neovim
+```
+
 # vim-plug
 
 ```
