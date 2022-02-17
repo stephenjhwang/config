@@ -76,3 +76,4 @@ alias nv='nvim'
 
 # misc aliases
 alias home='cd ~'
+alias steph='cd /mnt/c/Users/steph'
