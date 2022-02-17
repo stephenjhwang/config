@@ -1,49 +1,66 @@
-#!/bin/bash
 # If not running interactively, don't do anything
-[ -z "$PS1" ] && return
+case $- in
+    *i*) ;;
+      *) return;;
+esac
 
-# Source global definitions
-if [ -f /etc/bashrc ]; then
-        . /etc/bashrc
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+# set a fancy prompt (non-color, unless we know we "want" color)
+case "$TERM" in
+    xterm-color|*-256color) color_prompt=yes;;
+esac
+
+# colors!
+green="\[\033[0;32m\]"
+blue="\[\033[0;34m\]"
+purple="\[\033[0;35m\]"
+reset="\[\033[0m\]"
+
+# Change command prompt
+export GIT_PS1_SHOWDIRTYSTATE=1
+# '\u' adds the name of the current user to the prompt
+# '\$(__git_ps1)' adds git-related stuff
+# '\W' adds the name of the current directory
+export PS1="$purple\u$green\$(__git_ps1)$blue \W $ $reset"
+
+
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    dir='dir --color=auto'
+    vdir='vdir --color=auto'
+
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
 fi
 
-function get_hostname {
-  export SHORTNAME=""
-}
+# some more ls aliases
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
 
-function user_color {
-  id | grep "Admin" > /dev/null
-  RETVAL=$?
-  if [[ $RETVAL == 0 ]]; then
-    usercolor="[0;32m";
-  else
-    usercolor="[0;32m";
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
   fi
-}
+fi
 
-function settitle() {
-  u=${USERNAME}
-  h="$u@${HOSTNAME}"
-  echo -ne "\e]2;$h\a\e]1;$h\a";
-}
+# ssh
+alias uw='ssh -Y sj7hwang@linux.student.cs.uwaterloo.ca'
+alias uw-002='ssh sj7hwang@ubuntu2004-002.student.cs.uwaterloo.ca'
+alias uw-004='ssh sj7hwang@ubuntu2004-004.student.cs.uwaterloo.ca'
+alias uw-008='ssh sj7hwang@ubuntu2004-008.student.cs.uwaterloo.ca'
 
-# Set directory colors
-eval `dircolors ~/.dir_colors`
-
-# Set prompt and window title
-inputcolor='[0;37m'
-cwdcolor='[0;34m'
-host_name='[1;31m'
-user_color
-PROMPT_COMMAND='settitle; get_hostname; history -a;'
-
-parse_git_branch() {
-     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
-}
-export the_branch="$(parse_git_branch)"
-
-export PS1='\n\[\e${cwdcolor}\][$PWD]\[\e${usercolor}\][\u]\[\e${host_name}\]$(parse_git_branch) \[\e${inputcolor}\] $ '
-
-# Aliases
-alias ls='ls -l --color'
-alias grep='grep -n --color'
+# neovim
+alias nv='nvim'
+alias nv-config='nvim ~/.config/nvim/init.vim'
