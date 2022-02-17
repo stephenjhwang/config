@@ -26,6 +26,16 @@ export GIT_PS1_SHOWDIRTYSTATE=1
 # '\W' adds the name of the current directory
 export PS1="$purple\u$green\$(__git_ps1)$blue \W $ $reset"
 
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -44,16 +54,16 @@ alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
-if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-  fi
-fi
+# edit config aliases
+alias evimrc='nvim ~/.config/nvim/init.vim'
+alias eprofile='nvim ~/.bash_profile'
+alias ebashrc='nvim ~/.bashrc'
+
+# git aliases
+alias pull='git pull'
+alias push='git pull && git push'
+alias add='git add .'
+alias commit='git commit -m "$1"'
 
 # ssh
 alias uw='ssh -Y sj7hwang@linux.student.cs.uwaterloo.ca'
@@ -63,4 +73,6 @@ alias uw-008='ssh sj7hwang@ubuntu2004-008.student.cs.uwaterloo.ca'
 
 # neovim
 alias nv='nvim'
-alias nv-config='nvim ~/.config/nvim/init.vim'
+
+# misc aliases
+alias home='cd ~'
